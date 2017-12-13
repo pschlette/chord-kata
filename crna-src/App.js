@@ -6,7 +6,10 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Keyboard />
+        <Keyboard
+          startStep={0}
+          stepCount={20}
+        />
       </View>
     );
   }
