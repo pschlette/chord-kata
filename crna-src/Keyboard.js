@@ -10,15 +10,40 @@ type Props = {
   stepCount: number,
 }
 
-export default class Keyboard extends React.Component<Props> {
+type State = {
+  keySelections: { [number]: boolean }
+};
+
+export default class Keyboard extends React.Component<Props, State> {
   static isStepOnBlackKey = (step: number) => {
     const thisNote = step % 12;
     const blackNotes = [1, 3, 6, 8, 10];
     return _.includes(blackNotes, thisNote);
   }
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      keySelections: {}
+    };
+  }
+
+  // Toggle 'selected' status of the pressed key
+  handleKeyPress(step: number) {
+    const { keySelections } = this.state;
+    const currentSelectionStatus = keySelections[step];
+    this.setState({
+      keySelections: {
+        ...keySelections,
+        [step]: !currentSelectionStatus,
+      }
+    });
+  }
+
   render() {
     const { startStep, stepCount } = this.props;
+    const { keySelections } = this.state;
     const steps = _.times(stepCount, i => startStep + i);
 
     const { renderedKeys } = steps.reduce(({ nextWhiteKeyOffset, renderedKeys }: { nextWhiteKeyOffset: number, renderedKeys: [] }, thisStep) => {
@@ -28,10 +53,14 @@ export default class Keyboard extends React.Component<Props> {
         : nextWhiteKeyOffset;
 
       const nextKey = (
-        <View style={{ position: 'absolute', left: offset, zIndex: isBlack ? 1 : 0 }}>
+        <View
+          key={thisStep}
+          style={{ position: 'absolute', left: offset, zIndex: isBlack ? 1 : 0 }}
+        >
           <PianoKey
-            key={thisStep}
-            isBlack={isBlack}
+            black={isBlack}
+            selected={keySelections[thisStep] || false}
+            onPress={() => this.handleKeyPress(thisStep)}
           />
         </View>
       );

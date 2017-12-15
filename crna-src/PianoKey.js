@@ -1,12 +1,12 @@
 // @flow 
 
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableNativeFeedback } from 'react-native';
 
 type Props = {
-  isBlack: bool,
+  black: bool,
   selected: bool,
-  onSelect: () => void
+  onPress: () => void
 };
 
 export const WHITE_KEY_WIDTH = 60;
@@ -14,29 +14,48 @@ export const BLACK_KEY_WIDTH = 30;
 
 export default class PianoKey extends React.Component<Props> {
   render() {
-    const { isBlack } = this.props;
+    const { black, selected, onPress } = this.props;
 
     return (
-      <View style={isBlack ? styles.blackPianoKey : styles.whitePianoKey} />
+      <TouchableNativeFeedback
+        onPress={onPress}
+      >
+        <View style={black ? styles.blackPianoKey : styles.whitePianoKey}>
+          { selected ? <View style={styles.selectionIndicator} /> : null }
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 }
 
-const pianoKeyStyle = {
-  borderWidth: 1,
-  borderColor: '#888',
-};
 
-const styles = StyleSheet.create({
-  whitePianoKey: {
-    ...pianoKeyStyle,
-    backgroundColor: '#ddd',
-    width: WHITE_KEY_WIDTH,
-    height: 200,
-  },
-  blackPianoKey: {
+let styles: { [string]: Object } = undefined;
+{
+  const pianoKey = {
+    borderWidth: 1,
+    borderColor: '#888',
+  };
+
+  const whitePianoKey = {
+      ...pianoKey,
+      backgroundColor: '#ddd',
+      width: WHITE_KEY_WIDTH,
+      height: 200,
+    };
+
+  const blackPianoKey = {
+    ...pianoKey,
     backgroundColor: '#222',
     width: BLACK_KEY_WIDTH,
     height: 125,
-  },
-});
+  };
+
+  styles = StyleSheet.create({
+    whitePianoKey,
+    blackPianoKey,
+    selectionIndicator: {
+      backgroundColor: '#c00',
+      height: 25,
+    },
+  });
+}
