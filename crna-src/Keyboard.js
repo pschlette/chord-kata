@@ -8,6 +8,7 @@ import { StyleSheet, View } from 'react-native';
 type Props = {
   startStep: number,
   stepCount: number,
+  onSelectedStepsChange: (newSelectedSteps: number[]) => void,
 }
 
 type State = {
@@ -37,7 +38,7 @@ export default class Keyboard extends React.Component<Props, State> {
       keySelections: {
         ...keySelections,
         [step]: !currentSelectionStatus,
-      }
+      },
     });
   }
 

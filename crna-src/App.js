@@ -1,15 +1,45 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import Keyboard from './Keyboard';
 
-export default class App extends React.Component {
+type Props = {};
+type State = {
+  selectedSteps: number[],
+};
+
+export default class App extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.selectedSteps = [];
+  }
+
+  handleSubmitPress() {
+
+  }
+
+  handleSelectedStepsChange(newSelectedSteps: number[]) {
+    this.setState({ selectedSteps: newSelectedSteps });
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Keyboard
           startStep={0}
           stepCount={20}
+          onStepSelectionChange={this.handleSelectedStepsChange}
         />
+        <View style={styles.infoContainer}>
+          <View style={styles.targetChord}>
+            <Text>F Major</Text>
+          </View>
+          <View style={styles.submitButtonContainer}>
+            <Button
+              title="Submit"
+              onPress={this.handleSubmitPress}
+            />
+          </View>
+        </View>
       </View>
     );
   }
@@ -18,9 +48,20 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: '#0aa',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
+  },
+  infoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  targetChord: {
+  },
+  submitButtonContainer: {
   },
 });
