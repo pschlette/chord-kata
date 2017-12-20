@@ -8,12 +8,11 @@ import { StyleSheet, View } from 'react-native';
 type Props = {
   startStep: number,
   stepCount: number,
-  onSelectedStepsChange: (newSelectedSteps: number[]) => void,
+  selectedSteps: number[],
+  onStepSelectionChange: (newSelectedSteps: number[]) => void,
 }
 
-type State = {
-  keySelections: { [number]: boolean }
-};
+type State = { };
 
 export default class Keyboard extends React.Component<Props, State> {
   static isStepOnBlackKey = (step: number) => {
@@ -24,27 +23,28 @@ export default class Keyboard extends React.Component<Props, State> {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      keySelections: {}
-    };
   }
 
   // Toggle 'selected' status of the pressed key
-  handleKeyPress(step: number) {
-    const { keySelections } = this.state;
-    const currentSelectionStatus = keySelections[step];
-    this.setState({
-      keySelections: {
-        ...keySelections,
-        [step]: !currentSelectionStatus,
-      },
-    });
+  handleKeyPress = (step: number) => {
+    const { selectedSteps } = this.props;
+    const stepIndex = selectedSteps.indexOf(step);
+    if (stepIndex >= 0) {
+    // If the pressed step is already present in the list of selected steps, remove it
+      const selectedStepsMinusThisStep = [
+        ...selectedSteps.slice(0, stepIndex),
+        ...selectedSteps.slice(stepIndex + 1, selectedSteps.length)
+      ];
+      this.props.onStepSelectionChange(selectedStepsMinusThisStep);
+    } else {
+      // Otherwise add it
+      this.props.onStepSelectionChange([...selectedSteps, step]);
+    }
   }
 
   render() {
-    const { startStep, stepCount } = this.props;
-    const { keySelections } = this.state;
+    const { startStep, stepCount, selectedSteps } = this.props;
+    const selectedStepsMap = _.fromPairs(selectedSteps.map(step => [step, true]));
     const steps = _.times(stepCount, i => startStep + i);
 
     const { renderedKeys } = steps.reduce(({ nextWhiteKeyOffset, renderedKeys }: { nextWhiteKeyOffset: number, renderedKeys: [] }, thisStep) => {
@@ -60,7 +60,7 @@ export default class Keyboard extends React.Component<Props, State> {
         >
           <PianoKey
             black={isBlack}
-            selected={keySelections[thisStep] || false}
+            selected={selectedStepsMap[thisStep] || false}
             onPress={() => this.handleKeyPress(thisStep)}
           />
         </View>

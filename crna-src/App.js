@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import Keyboard from './Keyboard';
@@ -10,14 +12,17 @@ type State = {
 export default class App extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.selectedSteps = [];
+
+    this.state = {
+      selectedSteps: [],
+    };
   }
 
-  handleSubmitPress() {
-
+  handleSubmitPress = () => {
+    this.setState({ selectedSteps: [] });
   }
 
-  handleSelectedStepsChange(newSelectedSteps: number[]) {
+  handleSelectedStepsChange = (newSelectedSteps: number[]) => {
     this.setState({ selectedSteps: newSelectedSteps });
   }
 
@@ -27,6 +32,7 @@ export default class App extends React.Component<Props, State> {
         <Keyboard
           startStep={0}
           stepCount={20}
+          selectedSteps={this.state.selectedSteps}
           onStepSelectionChange={this.handleSelectedStepsChange}
         />
         <View style={styles.infoContainer}>
@@ -51,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#0aa',
     alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
   },
   infoContainer: {
     flex: 1,
