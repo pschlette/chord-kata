@@ -4,8 +4,8 @@ import React from 'react';
 import { StyleSheet, View, TouchableNativeFeedback } from 'react-native';
 
 type Props = {
-  black: bool,
-  selected: bool,
+  black: boolean,
+  selected: boolean,
   onPress: () => void
 };
 
@@ -29,8 +29,7 @@ export default class PianoKey extends React.Component<Props> {
 }
 
 
-let styles: { [string]: Object } = undefined;
-{
+const styles = (() => {
   const pianoKey = {
     borderWidth: 1,
     borderColor: '#888',
@@ -50,7 +49,7 @@ let styles: { [string]: Object } = undefined;
     height: 125,
   };
 
-  styles = StyleSheet.create({
+  return StyleSheet.create({
     whitePianoKey,
     blackPianoKey,
     selectionIndicator: {
@@ -58,4 +57,4 @@ let styles: { [string]: Object } = undefined;
       height: 25,
     },
   });
-}
+})();

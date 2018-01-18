@@ -21,7 +21,7 @@ export default class Keyboard extends React.Component<Props, State> {
     return _.includes(blackNotes, thisNote);
   }
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
@@ -33,7 +33,7 @@ export default class Keyboard extends React.Component<Props, State> {
     // If the pressed step is already present in the list of selected steps, remove it
       const selectedStepsMinusThisStep = [
         ...selectedSteps.slice(0, stepIndex),
-        ...selectedSteps.slice(stepIndex + 1, selectedSteps.length)
+        ...selectedSteps.slice(stepIndex + 1, selectedSteps.length),
       ];
       this.props.onStepSelectionChange(selectedStepsMinusThisStep);
     } else {
