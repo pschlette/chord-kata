@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import PracticeView from './PracticeView';
+import PracticeView from './components/PracticeView';
 
 type Props = {};
 type State = {};

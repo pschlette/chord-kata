@@ -1,5 +1,7 @@
 // @flow
 
+import { groupBy as _groupBy, times as _times } from 'lodash';
+
 const noteNamesToNotes = {
   "C": 0,
   "C#": 1,
@@ -20,11 +22,21 @@ const noteNamesToNotes = {
   "B": 11,
 };
 
+const noteNames: NoteName[] = Object.keys(noteNamesToNotes);
+
+const notesToNoteNames: { [number]: NoteName[] } = _groupBy(noteNames, (noteName: NoteName) => noteNamesToNotes[noteName]);
+
 type NoteName = $Keys<typeof noteNamesToNotes>;
+
+export const getAllNotes = (): number[] => _times(12, i => i);
 
 export const noteNameToNote = (noteName: NoteName): number => {
   return noteNamesToNotes[noteName];
 };
+
+export const getNoteNamesForNote = (note: number): NoteName[] => {
+  return notesToNoteNames[note] || [];
+}
 
 export const stepToNote = (step: number): number => {
   return step % 12;

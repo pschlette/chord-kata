@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
-import { isEqual as _isEqual } from 'lodash';
+import { isEqual as _isEqual, sample as _sample } from 'lodash';
 
-import { noteNameToNote, stepToNote } from './helpers/step-helpers';
+import * as StepHelpers from '../helpers/step-helpers';
+import * as ChordHelpers from '../helpers/chord-helpers';
+import type { Chord } from '../helpers/chord-helpers';
 import Keyboard from './Keyboard';
 
 type Props = {};
@@ -21,15 +23,20 @@ export default class PracticeView extends React.Component<Props, State> {
 
     this.state = {
       selectedSteps: [],
-      targetChordNotes: ['F', 'A', 'C'].map(noteNameToNote),
+      targetChordNotes: ['F', 'A', 'C'].map(StepHelpers.noteNameToNote),
       successCount: 0,
       failCount: 0,
     };
   }
 
+  static generateTargetChord = (): Chord => {
+    const rootNote: number = _sample(StepHelpers.getAllNotes());
+    return ChordHelpers.getMajorChordForNote(rootNote);
+  }
+
   handleSubmitPress = () => {
     const { successCount: currentSuccessCount, targetChordNotes } = this.state;
-    const stepsAsNotes = this.state.selectedSteps.map(stepToNote);
+    const stepsAsNotes: Chord = this.state.selectedSteps.map(StepHelpers.stepToNote);
     if (_isEqual(stepsAsNotes, targetChordNotes)) {
       this.setState({ successCount: currentSuccessCount + 1});
     }
