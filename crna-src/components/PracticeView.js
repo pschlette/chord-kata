@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { isEqual as _isEqual, sample as _sample } from 'lodash';
 
@@ -12,6 +12,7 @@ import Keyboard from './Keyboard';
 type Props = {};
 type State = {
   selectedSteps: number[],
+  targetChordName: string,
   targetChordNotes: number[],
   successCount: number,
   failCount: number,
@@ -21,26 +22,41 @@ export default class PracticeView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    const { name, notes } = PracticeView.generateTargetChord();
+
     this.state = {
       selectedSteps: [],
-      targetChordNotes: ['F', 'A', 'C'].map(StepHelpers.noteNameToNote),
+      targetChordName: name,
+      targetChordNotes: notes,
       successCount: 0,
       failCount: 0,
     };
   }
 
-  static generateTargetChord = (): Chord => {
-    const rootNote: number = _sample(StepHelpers.getAllNotes());
-    return ChordHelpers.getMajorChordForNote(rootNote);
+  static generateTargetChord = (): { name: string, notes: Chord } => {
+    const rootNote = _sample(StepHelpers.getAllNotes());
+    return {
+      name: `${StepHelpers.getNoteNamesForStep(rootNote)[0]} Major`,
+      notes: ChordHelpers.getMajorChordForNote(rootNote),
+    };
   }
 
   handleSubmitPress = () => {
-    const { successCount: currentSuccessCount, targetChordNotes } = this.state;
+    const { successCount: currentSuccessCount, failCount: currentFailCount, targetChordNotes } = this.state;
     const stepsAsNotes: Chord = this.state.selectedSteps.map(StepHelpers.stepToNote);
     if (_isEqual(stepsAsNotes, targetChordNotes)) {
-      this.setState({ successCount: currentSuccessCount + 1});
+      this.setState({ successCount: currentSuccessCount + 1 });
+    } else {
+      this.setState({ failCount: currentFailCount + 1 });
     }
-    this.setState({ selectedSteps: [] });
+
+    // Clear the selected steps and provide a new chord for the user to enter
+    const { name, notes } = PracticeView.generateTargetChord();
+    this.setState({
+      selectedSteps: [],
+      targetChordName: name,
+      targetChordNotes: notes,
+    });
   }
 
   handleSelectedStepsChange = (newSelectedSteps: number[]) => {
@@ -48,7 +64,7 @@ export default class PracticeView extends React.Component<Props, State> {
   }
 
   render() {
-    const { successCount, failCount } = this.state;
+    const { successCount, failCount, targetChordName } = this.state;
     return (
       <View style={styles.container}>
         <Keyboard
@@ -62,7 +78,7 @@ export default class PracticeView extends React.Component<Props, State> {
             <Text>Results: { successCount }/{ successCount + failCount }</Text>
           </View>
           <View style={styles.targetChord}>
-            <Text>F Major</Text>
+            <Text>{targetChordName}</Text>
           </View>
           <View style={styles.submitButtonContainer}>
             <Button

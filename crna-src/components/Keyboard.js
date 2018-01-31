@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import _ from 'lodash';
 import PianoKey, { WHITE_KEY_WIDTH, BLACK_KEY_WIDTH } from './PianoKey';
 import { StyleSheet, View } from 'react-native';
@@ -47,29 +47,34 @@ export default class Keyboard extends React.Component<Props, State> {
     const selectedStepsMap = _.fromPairs(selectedSteps.map(step => [step, true]));
     const steps = _.times(stepCount, i => startStep + i);
 
-    const { renderedKeys } = steps.reduce(({ nextWhiteKeyOffset, renderedKeys }: { nextWhiteKeyOffset: number, renderedKeys: [] }, thisStep) => {
-      const isBlack = Keyboard.isStepOnBlackKey(thisStep);
-      const offset = isBlack
-        ? nextWhiteKeyOffset - (BLACK_KEY_WIDTH / 2)
-        : nextWhiteKeyOffset;
+    // Generate piano key elements and track where to place the next key (the offset) for each step
+    const { renderedKeys } = steps.reduce((
+        { nextWhiteKeyOffset, renderedKeys }: { nextWhiteKeyOffset: number, renderedKeys: React.Node[] },
+        thisStep: number
+      ) => {
+        const isBlack = Keyboard.isStepOnBlackKey(thisStep);
+        const offset = isBlack
+          ? nextWhiteKeyOffset - (BLACK_KEY_WIDTH / 2)
+          : nextWhiteKeyOffset;
 
-      const nextKey = (
-        <View
-          key={thisStep}
-          style={{ position: 'absolute', left: offset, zIndex: isBlack ? 1 : 0 }}
-        >
-          <PianoKey
-            black={isBlack}
-            selected={selectedStepsMap[thisStep] || false}
-            onPress={() => this.handleKeyPress(thisStep)}
-          />
-        </View>
-      );
+        const nextKey = (
+          <View
+            key={thisStep}
+            style={{ position: 'absolute', left: offset, zIndex: isBlack ? 1 : 0 }}
+          >
+            <PianoKey
+              black={isBlack}
+              selected={selectedStepsMap[thisStep] || false}
+              onPress={() => this.handleKeyPress(thisStep)}
+            />
+          </View>
+        );
 
-      const newNextWhiteKeyOffset = isBlack ? nextWhiteKeyOffset : nextWhiteKeyOffset + WHITE_KEY_WIDTH;
+        const newNextWhiteKeyOffset = isBlack ? nextWhiteKeyOffset : nextWhiteKeyOffset + WHITE_KEY_WIDTH;
 
-      return { nextWhiteKeyOffset: newNextWhiteKeyOffset, renderedKeys: [...renderedKeys, nextKey] };
-    }, { nextWhiteKeyOffset: 0, renderedKeys: [] }
+        return { nextWhiteKeyOffset: newNextWhiteKeyOffset, renderedKeys: [...renderedKeys, nextKey] };
+    },
+    { nextWhiteKeyOffset: 0, renderedKeys: [] }
   );
 
     return (

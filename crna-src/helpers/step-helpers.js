@@ -24,7 +24,10 @@ const noteNamesToNotes = {
 
 const noteNames: NoteName[] = Object.keys(noteNamesToNotes);
 
-const notesToNoteNames: { [number]: NoteName[] } = _groupBy(noteNames, (noteName: NoteName) => noteNamesToNotes[noteName]);
+const notesToNoteNames: { [number]: NoteName[] } = _groupBy(
+  noteNames,
+  (noteName: NoteName) => noteNamesToNotes[noteName]
+);
 
 type NoteName = $Keys<typeof noteNamesToNotes>;
 
@@ -34,7 +37,8 @@ export const noteNameToNote = (noteName: NoteName): number => {
   return noteNamesToNotes[noteName];
 };
 
-export const getNoteNamesForNote = (note: number): NoteName[] => {
+export const getNoteNamesForStep = (step: number): NoteName[] => {
+  const note = stepToNote(step);
   return notesToNoteNames[note] || [];
 }
 

@@ -1,7 +1,9 @@
 // @flow
 
+import { stepToNote } from './step-helpers';
+
 export type Chord = number[];
 
 export function getMajorChordForNote(note: number): Chord {
-  return [note, note + 4, note + 7];
+  return [stepToNote(note), stepToNote(note + 4), stepToNote(note + 7)];
 }
