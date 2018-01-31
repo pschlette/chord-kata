@@ -1,5 +1,0 @@
-crna:
-        build: .
-        command: npm start
-        volumes:
-                - ./crna-src:/usr/src/app
