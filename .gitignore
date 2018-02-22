@@ -19,4 +19,7 @@ yarn-error.log*
 android/build
 android/app/build
 
+android/.gradle
+android/.idea
+
 crna-vscode-settings.code-workspace
