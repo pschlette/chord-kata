@@ -1,19 +1,17 @@
 // @flow
 
-import * as React from 'react';
+import { Navigation } from 'react-native-navigation';
 import PracticeView from './components/PracticeView';
 
-type Props = {};
-type State = {};
+const PRACTICE_VIEW_SCREEN_ID = 'chordkata.PracticeView';
 
-export default class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+Navigation.registerComponent(PRACTICE_VIEW_SCREEN_ID, () => PracticeView);
 
-    this.state = { };
-  }
-
-  render() {
-    return <PracticeView />;
-  }
-}
+Navigation.startSingleScreenApp({
+  screen: {
+    screen: PRACTICE_VIEW_SCREEN_ID,
+    title: 'Practice',
+    navigatorStyle: {},
+    navigatorButtons: {}
+  },
+});
