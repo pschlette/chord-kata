@@ -11,7 +11,12 @@ Navigation.startSingleScreenApp({
   screen: {
     screen: PRACTICE_VIEW_SCREEN_ID,
     title: 'Practice',
-    navigatorStyle: {},
+    navigatorStyle: {
+      navBarHidden: true,
+    },
     navigatorButtons: {}
+  },
+  appStyle: {
+    orientation: 'landscape',
   },
 });
