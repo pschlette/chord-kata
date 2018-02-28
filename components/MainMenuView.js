@@ -22,10 +22,13 @@ export default class MainMenuView extends React.Component<Props> {
     render() {
         return (
             <View style={styles.mainMenuContainer}>
-                <Button
-                    title="Start Practicing"
-                    onPress={this.handleStartButtonPress}
-                />
+                <View style={styles.startButtonContainer}>
+                    <Button
+                        style={styles.startButton}
+                        title="Start Practicing"
+                        onPress={this.handleStartButtonPress}
+                    />
+                </View>
             </View>
         );
     }
@@ -33,6 +36,13 @@ export default class MainMenuView extends React.Component<Props> {
 
 const styles = StyleSheet.create({
     mainMenuContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    startButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
     startButton: {
     },
